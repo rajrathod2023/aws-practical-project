@@ -86,3 +86,20 @@ It stores the SQLite database at `/app/data/tasks.db` inside the container.
 This is a learning project running locally. It has no authentication and has
 not been deployed to AWS. The database volume provides persistence, but
 backups are not yet configured.
+
+## Automated tests
+
+Install the development dependencies:
+
+```powershell
+python -m pip install -r requirements-dev.txt
+```
+
+Run the tests:
+
+```powershell
+python -m pytest -v
+```
+
+Tests use temporary SQLite databases, keeping saved application tasks separate.
+GitHub Actions runs the tests on pushes to main and pull requests targeting main.
