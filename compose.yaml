@@ -1,0 +1,13 @@
+services:
+  api:
+    build: .
+    image: raj-task-api
+    ports:
+      - "127.0.0.1:8001:8000"
+    volumes:
+      - task-data:/app/data
+
+volumes:
+  task-data:
+    external: true
+    name: raj-task-data
