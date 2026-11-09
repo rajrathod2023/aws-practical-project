@@ -49,3 +49,24 @@ def test_create_and_get_task():
 
         assert retrieved.status_code == 200
         assert retrieved.json() == task
+
+
+def test_complete_task():
+    with TestClient(app) as client:
+        created = client.post(
+            "/tasks",
+            json={"title": "Test task completion"},
+        )
+
+        assert created.status_code == 201
+        task_id = created.json()["id"]
+
+        updated = client.patch(f"/tasks/{task_id}/complete")
+
+        assert updated.status_code == 200
+        assert updated.json()["completed"] is True
+
+        retrieved = client.get(f"/tasks/{task_id}")
+
+        assert retrieved.status_code == 200
+        assert retrieved.json()["completed"] is True
