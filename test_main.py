@@ -70,3 +70,24 @@ def test_complete_task():
 
         assert retrieved.status_code == 200
         assert retrieved.json()["completed"] is True
+
+
+def test_delete_task():
+    with TestClient(app) as client:
+        created = client.post(
+            "/tasks",
+            json={"title": "Task to delete"},
+        )
+
+        assert created.status_code == 201
+        task = created.json()
+
+        deleted = client.delete(f"/tasks/{task['id']}")
+
+        assert deleted.status_code == 200
+        assert deleted.json()["task"] == task
+
+        retrieved = client.get(f"/tasks/{task['id']}")
+
+        assert retrieved.status_code == 404
+        assert retrieved.json() == {"detail": "Task not found"}
