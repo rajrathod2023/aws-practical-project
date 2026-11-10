@@ -31,7 +31,7 @@ jobs:
       - name: Build Docker image
         run: docker build -t raj-task-api:ci .
 
-              - name: Start container and check health
+      - name: Start container and check health
         run: |
           docker run -d --name task-api-ci -p 127.0.0.1:8001:8000 raj-task-api:ci
           curl --fail --retry 10 --retry-delay 2 --retry-connrefused http://127.0.0.1:8001/health
