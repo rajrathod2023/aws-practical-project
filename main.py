@@ -38,6 +38,17 @@ class TaskCreate(BaseModel):
     completed: bool = False
 
 
+class TaskResponse(BaseModel):
+    id: int
+    title: str
+    completed: bool
+
+
+class TaskDeleteResponse(BaseModel):
+    message: str
+    task: TaskResponse
+
+
 @app.get("/")
 def home():
     return {"message": "Hello Raj! Your API is running."}
@@ -63,7 +74,7 @@ def add_numbers(a: int, b: int):
     return {"result": a + b}
 
 
-@app.get("/tasks")
+@app.get("/tasks", response_model=list[TaskResponse])
 def get_tasks():
     with database_connection() as connection:
         rows = connection.execute(
@@ -72,7 +83,7 @@ def get_tasks():
         return [task_response(row) for row in rows]
 
 
-@app.get("/tasks/{task_id}")
+@app.get("/tasks/{task_id}", response_model=TaskResponse)
 def get_task(task_id: int):
     with database_connection() as connection:
         row = connection.execute(
@@ -85,7 +96,7 @@ def get_task(task_id: int):
         return task_response(row)
 
 
-@app.post("/tasks", status_code=201)
+@app.post("/tasks", status_code=201, response_model=TaskResponse)
 def create_task(new_task: TaskCreate):
     with database_connection() as connection:
         cursor = connection.execute(
@@ -99,7 +110,7 @@ def create_task(new_task: TaskCreate):
         }
 
 
-@app.patch("/tasks/{task_id}/complete")
+@app.patch("/tasks/{task_id}/complete", response_model=TaskResponse)
 def complete_task(task_id: int):
     with database_connection() as connection:
         cursor = connection.execute(
@@ -115,7 +126,7 @@ def complete_task(task_id: int):
         return task_response(row)
 
 
-@app.delete("/tasks/{task_id}")
+@app.delete("/tasks/{task_id}", response_model=TaskDeleteResponse)
 def delete_task(task_id: int):
     with database_connection() as connection:
         row = connection.execute(
@@ -128,4 +139,7 @@ def delete_task(task_id: int):
         connection.execute(
             "DELETE FROM tasks WHERE id = ?", (task_id,)
         )
-        return {"message": "Task deleted", "task": task_response(row)}
+        return {
+            "message": "Task deleted",
+            "task": task_response(row),
+        }
