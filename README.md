@@ -115,3 +115,15 @@ GitHub Actions runs these checks for pushes to main and pull requests targeting 
 5. Display container logs and remove the test container.
 
 This workflow validates the application. It does not deploy it.
+
+## Database backups (PowerShell)
+
+With the API container running, run:
+
+```powershell
+.\backup.ps1
+```
+
+The script saves a dated SQLite backup in `backups/`.
+This folder is excluded from Git and Docker builds.
+Backups remain on your PC; keep a separate copy for protection against disk failure.
