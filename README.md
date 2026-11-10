@@ -103,3 +103,15 @@ python -m pytest -v
 
 Tests use temporary SQLite databases, keeping saved application tasks separate.
 GitHub Actions runs the tests on pushes to main and pull requests targeting main.
+
+## Continuous integration checks
+
+GitHub Actions runs these checks for pushes to main and pull requests targeting main:
+
+1. Run five automated API tests using isolated SQLite databases.
+2. Build the Docker image.
+3. Start a test container.
+4. Wait for the API to become ready and check the /health endpoint.
+5. Display container logs and remove the test container.
+
+This workflow validates the application. It does not deploy it.
